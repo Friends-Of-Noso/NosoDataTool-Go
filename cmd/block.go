@@ -115,5 +115,4 @@ func blockRun(cm *cobra.Command, args []string) {
 	} else {
 		fmt.Println("No MN rewards")
 	}
-
 }

@@ -2,8 +2,15 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
+	"github.com/Friends-Of-Noso/NosoData-Go/legacy"
+	"github.com/Friends-Of-Noso/NosoData-Go/utils"
 	"github.com/spf13/cobra"
+)
+
+const (
+	cWalletFilename = "wallet.pkw"
 )
 
 // walletCmd represents the wallet command
@@ -34,5 +41,25 @@ func init() {
 }
 
 func walletRun(cmd *cobra.Command, args []string) {
-	fmt.Println("wallet called")
+	var filename = cWalletFilename
+	if nosoFolder != "" {
+		filename = filepath.Join(nosoFolder, "NOSODATA", filename)
+	} else {
+		filename = filepath.Join(".", "NOSODATA", "BLOCKS", filename)
+	}
+	wallet := legacy.LegacyWallet{}
+	err := wallet.ReadFromFile(filename)
+	cobra.CheckErr(err)
+	fmt.Println("--- Wallet ---")
+	for i, a := range wallet.Accounts {
+		fmt.Println("Position:", i)
+		fmt.Printf("    Hash: '%s'\n", a.Hash.GetString())
+		fmt.Printf("    Custom:         '%s'\n", a.Custom.GetString())
+		fmt.Printf("    Pub key:        '%s'\n", a.PublicKey.GetString())
+		fmt.Printf("    Priv key:       '%s'\n", a.PrivateKey.GetString())
+		fmt.Println("    Balance:       ", utils.ToNoso(a.Balance))
+		fmt.Println("    Pending:       ", utils.ToNoso(a.Pending))
+		fmt.Println("    Score:         ", utils.ToNoso(a.Score))
+		fmt.Println("    Last Operation:", utils.ToNoso(a.LastOperation))
+	}
 }
