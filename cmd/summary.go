@@ -2,8 +2,15 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
+	"github.com/Friends-Of-Noso/NosoData-Go/legacy"
+	"github.com/Friends-Of-Noso/NosoData-Go/utils"
 	"github.com/spf13/cobra"
+)
+
+const (
+	cSummaryFilename = "sumary.psk"
 )
 
 // summaryCmd represents the summary command
@@ -34,5 +41,22 @@ func init() {
 }
 
 func summaryRun(cmd *cobra.Command, args []string) {
-	fmt.Println("summary called")
+	var filename = cSummaryFilename
+	if nosoFolder != "" {
+		filename = filepath.Join(nosoFolder, "NOSODATA", filename)
+	} else {
+		filename = filepath.Join(".", "NOSODATA", "BLOCKS", filename)
+	}
+	summary := legacy.LegacySummary{}
+	err := summary.ReadFromFile(filename)
+	cobra.CheckErr(err)
+	fmt.Println("--- Summary ---")
+	for i, a := range summary.Accounts {
+		fmt.Println("Position:", i)
+		fmt.Printf("    Hash:           '%s'\n", a.Hash.GetString())
+		fmt.Printf("    Custom:         '%s'\n", a.Custom.GetString())
+		fmt.Println("    Balance:       ", utils.ToNoso(a.Balance))
+		fmt.Println("    Score:         ", utils.ToNoso(a.Score))
+		fmt.Println("    Last Operation:", utils.ToNoso(a.LastOperation))
+	}
 }
