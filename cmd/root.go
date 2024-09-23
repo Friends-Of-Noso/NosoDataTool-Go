@@ -8,7 +8,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile    string
+	nosoFolder string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,7 +44,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.NosoDataTool-Go.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.nosodatatoolgo)")
+	rootCmd.PersistentFlags().StringVarP(&nosoFolder, "noso-directory", "d", "", "root folder where to find Noso files")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
