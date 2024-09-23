@@ -2,8 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
+	"github.com/Friends-Of-Noso/NosoData-Go/legacy"
 	"github.com/spf13/cobra"
+)
+
+const (
+	cGVTFilename = "gvts.psk"
 )
 
 // gvtCmd represents the gvt command
@@ -34,5 +40,21 @@ func init() {
 }
 
 func gvtRun(cmd *cobra.Command, args []string) {
-	fmt.Println("gvt called")
+	var filename = cGVTFilename
+	if nosoFolder != "" {
+		filename = filepath.Join(nosoFolder, "NOSODATA", filename)
+	} else {
+		filename = filepath.Join(".", "NOSODATA", filename)
+	}
+	gvts := legacy.LegacyGVT{}
+	err := gvts.ReadFromFile(filename)
+	cobra.CheckErr(err)
+	fmt.Println("--- GVT ---")
+	for i, e := range gvts.Entries {
+		fmt.Println("Position:", i)
+		fmt.Printf("    Number:  '%s'\n", e.Number.GetString())
+		fmt.Printf("    Owner:   '%s'\n", e.Owner.GetString())
+		fmt.Printf("    Hash:    '%s'\n", e.Hash.GetString())
+		fmt.Println("    Control:", e.Control)
+	}
 }

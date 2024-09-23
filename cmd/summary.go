@@ -45,7 +45,7 @@ func summaryRun(cmd *cobra.Command, args []string) {
 	if nosoFolder != "" {
 		filename = filepath.Join(nosoFolder, "NOSODATA", filename)
 	} else {
-		filename = filepath.Join(".", "NOSODATA", "BLOCKS", filename)
+		filename = filepath.Join(".", "NOSODATA", filename)
 	}
 	summary := legacy.LegacySummary{}
 	err := summary.ReadFromFile(filename)
