@@ -16,12 +16,12 @@ const (
 // walletCmd represents the wallet command
 var walletCmd = &cobra.Command{
 	Use:   "wallet",
-	Short: "This command allows to query the contents of a wallet file",
+	Short: "Display the contents of a wallet file",
 	Run:   walletRun,
 }
 
 func init() {
-	rootCmd.AddCommand(walletCmd)
+	displayCmd.AddCommand(walletCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -44,6 +44,10 @@ func walletRun(cmd *cobra.Command, args []string) {
 	wallet := legacy.LegacyWallet{}
 	err := wallet.ReadFromFile(filename)
 	cobra.CheckErr(err)
+	if displayInJSON {
+		fmt.Println(wallet.AsJSON())
+		return
+	}
 	fmt.Println("--- Wallet ---")
 	for i, a := range wallet.Accounts {
 		fmt.Println("Position:", i)

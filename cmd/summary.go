@@ -16,12 +16,12 @@ const (
 // summaryCmd represents the summary command
 var summaryCmd = &cobra.Command{
 	Use:   "summary",
-	Short: "This command allows to query the contents of a summary file",
+	Short: "Display the contents of a summary file",
 	Run:   summaryRun,
 }
 
 func init() {
-	rootCmd.AddCommand(summaryCmd)
+	displayCmd.AddCommand(summaryCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -44,6 +44,10 @@ func summaryRun(cmd *cobra.Command, args []string) {
 	summary := legacy.LegacySummary{}
 	err := summary.ReadFromFile(filename)
 	cobra.CheckErr(err)
+	if displayInJSON {
+		fmt.Println(summary.AsJSON())
+		return
+	}
 	fmt.Println("--- Summary ---")
 	for i, a := range summary.Accounts {
 		fmt.Println("Position:", i)

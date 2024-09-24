@@ -15,12 +15,12 @@ const (
 // gvtCmd represents the gvt command
 var gvtCmd = &cobra.Command{
 	Use:   "gvt",
-	Short: "This command allows to query the contents of a GVT file",
+	Short: "Display the contents of a GVT file",
 	Run:   gvtRun,
 }
 
 func init() {
-	rootCmd.AddCommand(gvtCmd)
+	displayCmd.AddCommand(gvtCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -43,6 +43,10 @@ func gvtRun(cmd *cobra.Command, args []string) {
 	gvts := legacy.LegacyGVT{}
 	err := gvts.ReadFromFile(filename)
 	cobra.CheckErr(err)
+	if displayInJSON {
+		fmt.Println(gvts.AsJSON())
+		return
+	}
 	fmt.Println("--- GVT ---")
 	for i, e := range gvts.Entries {
 		fmt.Println("Position:", i)

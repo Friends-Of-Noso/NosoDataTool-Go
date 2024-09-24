@@ -19,13 +19,13 @@ const (
 // blockCmd represents the block command
 var blockCmd = &cobra.Command{
 	Use:   "block [number]",
-	Short: "This command allows to query blocks by block number",
+	Short: "Display the contents of blocks by block number",
 	Args:  cobra.ExactArgs(1),
 	Run:   blockRun,
 }
 
 func init() {
-	rootCmd.AddCommand(blockCmd)
+	displayCmd.AddCommand(blockCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -50,8 +50,13 @@ func blockRun(cm *cobra.Command, args []string) {
 	block := legacy.LegacyBlock{}
 	err = block.ReadFromFile(filename)
 	cobra.CheckErr(err)
+	if displayInJSON {
+		fmt.Println(block.AsJSON())
+		return
+	}
 	fmt.Println("--- Block ---")
 	fmt.Println("Number:           ", block.Number)
+	fmt.Printf("HASH:              '%s'\n", block.HASH)
 	fmt.Println("Time Start:       ", time.Unix(block.TimeStart, 0))
 	fmt.Println("Time End:         ", time.Unix(block.TimeEnd, 0))
 	fmt.Println("Time Total:       ", block.TimeTotal, "seconds")

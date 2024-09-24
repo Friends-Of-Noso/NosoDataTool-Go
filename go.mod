@@ -3,7 +3,7 @@ module github.com/Friends-Of-Noso/NosoDataTool-Go
 go 1.23.1
 
 require (
-	github.com/Friends-Of-Noso/NosoData-Go v0.0.0-20240923030454-06e80ed1cd51
+	github.com/Friends-Of-Noso/NosoData-Go v0.0.8
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 )
